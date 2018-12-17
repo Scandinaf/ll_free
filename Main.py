@@ -1,4 +1,5 @@
 import sys, getopt
+from service.word_service import save_word
 
 
 def main(argv):
@@ -8,9 +9,9 @@ def main(argv):
         show_help_information()
         sys.exit(2)
 
-    for opt, arg in optlist:
+    for opt, arg_json in optlist:
         if opt == '-a' or opt == '--add':
-            print("Record was added!!!")
+            print(save_word(arg_json))
         else:
             show_help_information()
             sys.exit(2)
