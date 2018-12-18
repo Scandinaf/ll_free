@@ -2,6 +2,7 @@ import pytest
 
 from service.audio_record_loader import *
 
+service = AudioRecordLoader(dir_path = "E:\\dictionary_test\\")
 invalid_text = """As its name states, EETS was begun as a 'club',
 and it retains certain features of that even now. It has no physical location,
 or even office, no paid staff or editors, but books in the Original Series are published
@@ -22,29 +23,29 @@ books have only a very limited selection of the many published."""
 
 @pytest.mark.asyncio
 async def test_correct_behaviour():
-    file_path = await load_audio_record("bad")
+    file_path = await service.load_audio_record("bad")
     assert "bad.mp3" == file_path[-7:]
     __delete_file__(file_path)
 
-    file_path = await load_audio_record(123.323)
+    file_path = await service.load_audio_record(123.323)
     assert "123.323.mp3" == file_path[-11:]
     __delete_file__(file_path)
 
 
 @pytest.mark.asyncio
 async def test_duplicate():
-    file_path = await load_audio_record("bad")
+    file_path = await service.load_audio_record("bad")
     assert "bad.mp3" == file_path[-7:]
 
     with pytest.raises(FileExistsError):
-        await load_audio_record("bad")
+        await service.load_audio_record("bad")
     __delete_file__(file_path)
 
 
 @pytest.mark.asyncio
 async def test_invalid_text():
     with pytest.raises(HttpException):
-        await load_audio_record(invalid_text)
+        await service.load_audio_record(invalid_text)
 
 
 def __delete_file__(file_path):
