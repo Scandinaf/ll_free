@@ -1,32 +1,32 @@
 import asyncio
-import getopt
 import logging
 import sys
+from getopt import GetoptError
 from logging.config import fileConfig
 
+from model.word import Word
+from service.command_line_arg_parser import CommandLineArgParser
 from service.word_service import WordService
 
 
 async def main(argv, loop):
-    optlist, _ = getopt.getopt(argv, "a:", ["add="])
-
-    if len(optlist) == 0:
-        show_help_information()
-        sys.exit(2)
-
-    for opt, arg_json in optlist:
-        word_service = WordService(loop)
-        if opt == '-a' or opt == '--add':
-            print(await word_service.save_word(arg_json))
-        else:
-            show_help_information()
-            sys.exit(2)
+    try:
+        cmd_parser = CommandLineArgParser(argv)
+    except GetoptError as exp:
+        print(exp.msg)
+    else:
+        await command_line_arg_handler(cmd_parser, loop)
 
 
-def show_help_information():
-    print('Usage: Main.py [options]')
-    print('Options:')
-    print('-a, --add OBJECT     Add new word in the vocabulary')
+async def command_line_arg_handler(cmd_parser, loop):
+    word_service = WordService(loop)
+    arg_dict = cmd_parser.arg_dict
+    if '-a' in arg_dict or '--add' in arg_dict:
+        print(await word_service
+              .save_word(cmd_parser
+                         .arg_dict_to_json(Word)))
+    else:
+        print(CommandLineArgParser.get_help_information())
 
 
 def init_logger():
