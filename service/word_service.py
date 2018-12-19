@@ -22,6 +22,9 @@ class WordService:
             json_dict = json.loads(arg_json)
             validate_json(Word.get_json_schema(), json_dict)
             word_inst = Word.init_form_json(json_dict)
+            db_record = await self.db_layer.word.find_one_by_word(word_inst.word)
+            if db_record is not None:
+                return Error("The dictionary already contains this word. Word - {}".format(word_inst.word))
             await self.__init_audio_record_path__(word_inst)
             await self.db_layer.word.save(vars(word_inst))
             return "Word was added!!!"

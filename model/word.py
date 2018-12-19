@@ -4,6 +4,7 @@ import json
 class Word:
     def __init__(self, word, translation, phrase=None, synonyms=[]):
         self.word = word.strip()
+        self.word_lower = self.word.lower()
         self.translation = translation
         self.phrase = phrase.strip() if phrase is not None else None
         self.synonyms = synonyms

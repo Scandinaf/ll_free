@@ -18,3 +18,6 @@ class MongoDBWord(MongoDB):
         self.collection.create_index([("study_status", pymongo.DESCENDING),
                                       ("last_repeat_date", pymongo.DESCENDING)],
                                      name = "Study_status_Last_repeat_date_Index")
+
+    async def find_one_by_word(self, word):
+        return await self.collection.find_one({'word_lower': word.lower()})

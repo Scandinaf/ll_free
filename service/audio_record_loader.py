@@ -62,8 +62,8 @@ class AudioRecordLoader:
         word = str(word)
         async with aiohttp.ClientSession() as session:
             async with session.post(self.soundoftext_url,
-                                    data= self.__build_body__(word),
-                                    headers= self.soundoftext_request_headers) as response:
+                                    data=self.__build_body__(word),
+                                    headers=self.soundoftext_request_headers) as response:
                 await self.__response_status_handler__(response)
                 return await self.__load_file_request_retry__(session, await response.json(), word)
 

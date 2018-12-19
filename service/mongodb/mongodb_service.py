@@ -3,4 +3,4 @@ class MongoDB:
         self.collection = mongo_client[db_name][collection_name]
 
     async def save(self, obj):
-        await self.collection.insert_one(obj)
+        return await self.collection.insert_one(obj)
