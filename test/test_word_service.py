@@ -2,7 +2,7 @@ import pytest
 
 from service.word_service import *
 
-word_service = WordService(loop=None)
+word_service = WordService(db_layer=None)
 
 
 @pytest.mark.asyncio

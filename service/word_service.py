@@ -8,14 +8,13 @@ from model.error import Error
 from model.http_exception import HttpException
 from model.word import Word
 from service.audio_record_loader import AudioRecordLoader
-from service.mongodb.db_layer import DBLayer
 from service.json_validator import validate_json
 
 
 class WordService:
-    def __init__(self, loop):
+    def __init__(self, db_layer):
         self.audio_loader_service = AudioRecordLoader(dir_path="E:\\dictionary\\")
-        self.db_layer = DBLayer(loop)
+        self.db_layer = db_layer
         self.module_logger = logging.getLogger()
 
     async def save_word(self, arg_json):
