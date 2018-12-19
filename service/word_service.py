@@ -13,7 +13,6 @@ from service.json_validator import validate_json
 
 class WordService:
     def __init__(self, db_layer):
-        self.audio_loader_service = AudioRecordLoader(dir_path="E:\\dictionary\\")
         self.db_layer = db_layer
         self.module_logger = logging.getLogger()
 
@@ -25,7 +24,6 @@ class WordService:
             db_record = await self.db_layer.word.find_one_by_word(word_inst.word)
             if db_record is not None:
                 return Error("The dictionary already contains this word. Word - {}".format(word_inst.word))
-            await self.__init_audio_record_path__(word_inst)
             await self.db_layer.word.save(vars(word_inst))
             return "Word was added!!!"
         except (TypeError, ValidationError) as exp:
