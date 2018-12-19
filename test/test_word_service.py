@@ -1,8 +1,22 @@
 import pytest
+from mock import MagicMock
 
 from service.word_service import *
 
+
+async def __default_coroutine__():
+    return None
+
+
+def __mock_objects__():
+    word_service.db_layer = MagicMock()
+    word_service.db_layer.word.save.return_value = __default_coroutine__()
+    word_service.audio_loader_service = MagicMock()
+    word_service.audio_loader_service.load_audio_record.return_value = __default_coroutine__()
+
+
 word_service = WordService(db_layer=None)
+__mock_objects__()
 
 
 @pytest.mark.asyncio
@@ -48,14 +62,6 @@ async def test_required_fields():
 
 
 @pytest.mark.asyncio
-async def test_valid_json(mocker):
-    mocker.patch.object(word_service.audio_loader_service, 'load_audio_record')
-    word_service.audio_loader_service.load_audio_record.return_value = __default_coroutine__()
-    mocker.patch.object(word_service.db_layer.word, 'save')
-    word_service.db_layer.word.save.return_value = __default_coroutine__()
+async def test_valid_json():
     result = await word_service.save_word("""{"word" : "bad", "translation": "плохой"}""")
     assert result == "Word was added!!!"
-
-
-async def __default_coroutine__():
-    return None
