@@ -2,14 +2,19 @@ import getopt
 
 
 class CommandLineArgParser:
-    shortopts = "aw:t:p:s:"
-    lognopts = ["add="]
+    shortopts = "agdhw:t:p:s:"
+    lognopts = ["add","get","delete","help"]
 
     def __init__(self, argv):
         optlist, _ = getopt.getopt(argv,
                                    CommandLineArgParser.shortopts,
                                    CommandLineArgParser.lognopts)
         self.arg_dict = dict(optlist)
+        self.__validate_arg_dict__()
+
+    def __validate_arg_dict__(self):
+        if '-w' not in self.arg_dict:
+            raise getopt.GetoptError(msg="The parameter -w is required", opt="-w")
 
     def arg_dict_to_json(self, cls):
         return cls.arg_dict_to_json(self.arg_dict)
@@ -18,4 +23,10 @@ class CommandLineArgParser:
     def get_help_information():
         return 'Usage: Main.py [options]\n' \
                + 'Options:\n' \
-               + '-a, --add OBJECT     Add new word in the vocabulary\n'
+               + '-w [Required]    A word that will be saved in the dictionary\n' \
+               + '-t               A translation that will be saved in the dictionary\n' \
+               + '-p               A phrase with the specified word\n' \
+               + '-s               A synonyms for the specified word\n' \
+               + '-a, --add        Add new word in the dictionary\n' \
+               + '-d, --delete     Delete word from the dictionary\n' \
+               + '-g, --get        Get word from the dictionary\n'

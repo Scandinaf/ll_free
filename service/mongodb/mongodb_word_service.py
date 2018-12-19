@@ -19,5 +19,17 @@ class MongoDBWord(MongoDB):
                                       ("last_repeat_date", pymongo.DESCENDING)],
                                      name = "Study_status_Last_repeat_date_Index")
 
+    def __get_query_by_word__(self, word):
+            return {'word_lower': word.lower()}
+
     async def find_one_by_word(self, word):
-        return await self.collection.find_one({'word_lower': word.lower()})
+        return await self.collection.find_one(self.__get_query_by_word__(word))
+
+    async def record_is_exists(self, word):
+        db_record_dict = await self.collection.find_one(
+            self.__get_query_by_word__(word))
+        return db_record_dict is not None
+
+    async def delete_by_word(self, word):
+        return await self.collection.delete_one(
+            self.__get_query_by_word__(word))

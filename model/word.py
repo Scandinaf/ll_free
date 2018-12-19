@@ -2,7 +2,7 @@ import json
 
 
 class Word:
-    def __init__(self, word, translation, phrase=None, synonyms=[]):
+    def __init__(self, word, translation, phrase=None, synonyms=[], *args, **keywords):
         self.word = word.strip()
         self.word_lower = self.word.lower()
         self.translation = translation
@@ -11,6 +11,12 @@ class Word:
         self.sound_record_path = None
         self.study_status = None
         self.last_repeat_date = None
+
+    def get_pretty_view(self):
+        return 'Word - {}\n'.format(self.word) \
+        + 'Translation - {}\n'.format(self.translation) \
+        + 'Phrase - {}\n'.format(self.phrase) \
+        + 'Synonyms - {}\n'.format(','.join(self.synonyms))
 
     @classmethod
     def init_form_json(cls, json_dic):

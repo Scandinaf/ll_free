@@ -17,14 +17,14 @@ def test_correct_parsing():
 
 
 def test_not_valid_args():
-    result = CommandLineArgParser("-a -w bad").arg_dict
-    assert result == {}
-
     with pytest.raises(TypeError):
         CommandLineArgParser(123)
 
     with pytest.raises(GetoptError):
         CommandLineArgParser(["-nef"])
+
+    with pytest.raises(GetoptError):
+        CommandLineArgParser(["--add"])
 
 
 def test_valid_args():

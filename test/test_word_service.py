@@ -4,8 +4,8 @@ from mock import MagicMock
 from service.word_service import *
 
 
-async def __default_coroutine__():
-    return None
+async def __default_coroutine__(value=None):
+    return value
 
 
 def __mock_objects__():
@@ -17,6 +17,28 @@ def __mock_objects__():
 
 word_service = WordService(db_layer=None)
 __mock_objects__()
+
+
+@pytest.mark.asyncio
+async def test_get_word_not_found():
+    word_service.db_layer.word.find_one_by_word.return_value = __default_coroutine__()
+    result = await word_service.get_word("test")
+    assert isinstance(result, Error)
+
+
+@pytest.mark.asyncio
+async def test_get_word_correct():
+    word_dict = {'word': 'bad', 'translation': 'плохой', 'synonyms': ["poor", "bad"]}
+    word_service.db_layer.word.find_one_by_word.return_value = __default_coroutine__(word_dict)
+    result = await word_service.get_word("test")
+    assert isinstance(result, str)
+
+
+@pytest.mark.asyncio
+async def test_delete_word_correct():
+    word_service.db_layer.word.delete_by_word.return_value = __default_coroutine__()
+    result = await word_service.delete_word("test")
+    assert result == "Word was deleted!!!"
 
 
 @pytest.mark.asyncio
@@ -51,6 +73,10 @@ async def test_not_valid_json():
     result = await word_service.save_word("""{"synonyms" : [1,2,3]}""")
     assert isinstance(result, Error)
 
+    word_service.db_layer.word.record_is_exists.return_value = __default_coroutine__(True)
+    result = await word_service.save_word("""{"word" : "bad", "translation": "плохой"}""")
+    assert isinstance(result, Error)
+
 
 @pytest.mark.asyncio
 async def test_required_fields():
@@ -63,5 +89,6 @@ async def test_required_fields():
 
 @pytest.mark.asyncio
 async def test_valid_json():
+    word_service.db_layer.word.record_is_exists.return_value = __default_coroutine__(False)
     result = await word_service.save_word("""{"word" : "bad", "translation": "плохой"}""")
     assert result == "Word was added!!!"
