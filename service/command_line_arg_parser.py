@@ -2,8 +2,8 @@ import getopt
 
 
 class CommandLineArgParser:
-    shortopts = "agdhw:t:p:s:"
-    lognopts = ["add","get","delete","help"]
+    shortopts = "agdw:t:p:s:"
+    lognopts = ["add","get","delete"]
 
     def __init__(self, argv):
         optlist, _ = getopt.getopt(argv,
@@ -21,12 +21,13 @@ class CommandLineArgParser:
 
     @staticmethod
     def get_help_information():
-        return 'Usage: Main.py [options]\n' \
+        return 'Usage: Main.py [operation] [options]\n' \
                + 'Options:\n' \
                + '-w [Required]    A word that will be saved in the dictionary\n' \
                + '-t               A translation that will be saved in the dictionary\n' \
                + '-p               A phrase with the specified word\n' \
                + '-s               A synonyms for the specified word\n' \
+               + 'Operations:\n' \
                + '-a, --add        Add new word in the dictionary\n' \
                + '-d, --delete     Delete word from the dictionary\n' \
                + '-g, --get        Get word from the dictionary\n'

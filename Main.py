@@ -12,6 +12,7 @@ async def main(argv):
         cmd_parser = CommandLineArgParser(argv)
     except GetoptError as exp:
         print(exp.msg)
+        print(CommandLineArgParser.get_help_information())
     else:
         await command_line_arg_handler(cmd_parser)
 
