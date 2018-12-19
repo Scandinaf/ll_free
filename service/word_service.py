@@ -7,7 +7,6 @@ from jsonschema import ValidationError
 from model.error import Error
 from model.http_exception import HttpException
 from model.word import Word
-from service.audio_record_loader import AudioRecordLoader
 from service.json_validator import validate_json
 
 
