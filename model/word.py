@@ -2,7 +2,7 @@ import json
 
 
 class Word:
-    def __init__(self, word, translation, phrase=None, synonyms=[],
+    def __init__(self, word, translation=None, phrase=None, synonyms=[],
                  sound_record_path=None, study_status=None,
                  last_repeat_date=None, *args, **keywords):
         self.word = word.strip()
