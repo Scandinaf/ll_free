@@ -21,8 +21,7 @@ __mock_objects__()
 
 @pytest.mark.asyncio
 async def test_update_word_correct():
-    word_service.db_layer.word.record_is_exists.return_value = __default_coroutine__(True)
-    word_service.db_layer.word.update.return_value = __default_coroutine__()
+    word_service.db_layer.word.find_one_and_update.return_value = __default_coroutine__({"word": "bad"})
     result = await word_service.update_word("""{"word" : "bad", "translation": "плохой"}""")
     assert result == "Word was updated!!!"
 
@@ -47,7 +46,7 @@ async def test_update_word_invalid_json():
 
 @pytest.mark.asyncio
 async def test_update_word_not_found():
-    word_service.db_layer.word.record_is_exists.return_value = __default_coroutine__(False)
+    word_service.db_layer.word.find_one_and_update.return_value = __default_coroutine__()
     result = await word_service.update_word("""{"word" : "bad", "translation": "плохой"}""")
     assert isinstance(result, Error)
 
@@ -68,8 +67,16 @@ async def test_get_word_correct():
 
 
 @pytest.mark.asyncio
+async def test_delete_word_not_found():
+    word_service.db_layer.word.find_one_and_delete.return_value = __default_coroutine__()
+    result = await word_service.delete_word("test")
+    assert isinstance(result, Error)
+
+
+@pytest.mark.asyncio
 async def test_delete_word_correct():
-    word_service.db_layer.word.delete_by_word.return_value = __default_coroutine__()
+    word_service.db_layer.word.find_one_and_delete.return_value = \
+        __default_coroutine__({"sound_record_path" : None})
     result = await word_service.delete_word("test")
     assert result == "Word was deleted!!!"
 

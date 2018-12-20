@@ -1,4 +1,5 @@
 import pymongo
+from pymongo import ReturnDocument
 
 from service.mongodb.mongodb_service import MongoDB
 
@@ -25,15 +26,16 @@ class MongoDBWord(MongoDB):
     async def find_one_by_word(self, word):
         return await self.collection.find_one(self.__get_query_by_word__(word))
 
-    async def update(self, word, json_dict):
-        return await self.collection.update_one(self.__get_query_by_word__(word),
-                                                {"$set": json_dict})
+    async def find_one_and_update(self, word, json_dict):
+        return await self.collection.find_one_and_update(self.__get_query_by_word__(word),
+                                                         {"$set": json_dict},
+                                                         return_document=ReturnDocument.AFTER)
 
     async def record_is_exists(self, word):
         db_record_dict = await self.collection.find_one(
             self.__get_query_by_word__(word))
         return db_record_dict is not None
 
-    async def delete_by_word(self, word):
-        return await self.collection.delete_one(
+    async def find_one_and_delete(self, word):
+        return await self.collection.find_one_and_delete(
             self.__get_query_by_word__(word))
