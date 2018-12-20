@@ -24,6 +24,10 @@ async def command_line_arg_handler(cmd_parser):
         print(await word_service
               .save_word(cmd_parser
                          .arg_dict_to_json(Word)))
+    elif '-u' in arg_dict or '--update' in arg_dict:
+        print(await word_service
+              .update_word(cmd_parser
+                           .arg_dict_to_json(Word)))
     elif '-g' in arg_dict or '--get' in arg_dict:
         print(await word_service
               .get_word(arg_dict['-w']))

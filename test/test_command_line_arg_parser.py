@@ -21,6 +21,9 @@ def test_not_valid_args():
         CommandLineArgParser(123)
 
     with pytest.raises(GetoptError):
+        CommandLineArgParser([])
+
+    with pytest.raises(GetoptError):
         CommandLineArgParser(["-nef"])
 
     with pytest.raises(GetoptError):

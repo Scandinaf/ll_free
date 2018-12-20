@@ -17,13 +17,17 @@ class MongoDBWord(MongoDB):
                                      name="Word_Unique_Index")
         self.collection.create_index([("study_status", pymongo.DESCENDING),
                                       ("last_repeat_date", pymongo.DESCENDING)],
-                                     name = "Study_status_Last_repeat_date_Index")
+                                     name="Study_status_Last_repeat_date_Index")
 
     def __get_query_by_word__(self, word):
             return {'word_lower': word.lower()}
 
     async def find_one_by_word(self, word):
         return await self.collection.find_one(self.__get_query_by_word__(word))
+
+    async def update(self, word, json_dict):
+        return await self.collection.update_one(self.__get_query_by_word__(word),
+                                                {"$set": json_dict})
 
     async def record_is_exists(self, word):
         db_record_dict = await self.collection.find_one(
