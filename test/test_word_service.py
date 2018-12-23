@@ -11,11 +11,11 @@ async def __default_coroutine__(value=None):
 def __mock_objects__():
     word_service.db_layer = MagicMock()
     word_service.db_layer.word.save.return_value = __default_coroutine__()
-    word_service.audio_loader_service = MagicMock()
-    word_service.audio_loader_service.load_audio_record.return_value = __default_coroutine__()
+    word_service.producer = MagicMock()
+    word_service.producer.send_message.return_value = __default_coroutine__()
 
 
-word_service = WordService(db_layer=None)
+word_service = WordService(db_layer=None, producer=None)
 __mock_objects__()
 
 

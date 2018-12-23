@@ -6,7 +6,7 @@ from service.decorator import validate_wrapper
 
 class CommandLineArgParser:
     shortopts = "agduw:t:p:s:"
-    lognopts = ["add", "get", "delete", "update"]
+    lognopts = ["add", "get", "delete", "update", "reload_translation"]
 
     def __init__(self, argv):
         optlist, _ = getopt.getopt(argv,
@@ -30,9 +30,10 @@ class CommandLineArgParser:
                + '-p               A phrase with the specified word\n' \
                + '-s               A synonyms for the specified word\n\n' \
                + 'Operations:\n' \
-               + '-a, --add        Add new word in the dictionary\n' \
-               + '-d, --delete     Delete word from the dictionary\n' \
-               + '-g, --get        Get word from the dictionary\n' \
-               + '-u, --update     Update word from the dictionary\n\n' \
+               + '-a, --add                 Add new word in the dictionary\n' \
+               + '-d, --delete              Delete word from the dictionary\n' \
+               + '-g, --get                 Get word from the dictionary\n' \
+               + '-u, --update              Update word from the dictionary\n' \
+               + '--reload_translation      Reload translation for a specific word\n\n' \
                + 'Example:\n' \
                + 'Main.py -add -w bad -t плохой\n' \
