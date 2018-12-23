@@ -39,3 +39,7 @@ class MongoDBWord(MongoDB):
     async def find_one_and_delete(self, word):
         return await self.collection.find_one_and_delete(
             self.__get_query_by_word__(word))
+
+    async def update_audio_record_path(self, word, sound_record_path):
+        return await self.collection.update_one(self.__get_query_by_word__(word),
+                                                {"$set": {'sound_record_path' : sound_record_path}})
