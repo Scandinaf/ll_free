@@ -5,6 +5,7 @@ from jsonschema import ValidationError
 
 from model.error import Error
 from model.word import Word
+from model.word_kafka_message import WordKafkaMessage
 from service.kafka.producer import Producer
 from utils.helper import remove_file, validate_json, exclude_json_fields
 
@@ -19,7 +20,7 @@ class WordService:
         try:
             if not await self.db_layer.word.record_is_exists(word):
                 return Error("Word not found!!!")
-            await self.producer.send_message(word)
+            await self.producer.send_message(WordKafkaMessage(word))
             return "The audio recording will be updated!!!"
         except Exception as exp:
             return self.__unexpected_exception__(exp)
@@ -77,7 +78,7 @@ class WordService:
             if await self.db_layer.word.record_is_exists(word_inst.word):
                 return Error("The dictionary already contains this word. Word - {}".format(word_inst.word))
             await self.db_layer.word.save(vars(word_inst))
-            await self.producer.send_message(word_inst)
+            await self.producer.send_message(WordKafkaMessage(word_inst.word))
         except (TypeError, ValidationError) as exp:
             return Error(exp)
         except JSONDecodeError:

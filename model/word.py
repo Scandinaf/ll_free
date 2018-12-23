@@ -14,9 +14,6 @@ class Word:
         self.study_status = study_status
         self.last_repeat_date = last_repeat_date
 
-    def get_kafka_message(self):
-        return json.dumps({"word" : self.word})
-
     def get_pretty_view(self):
         return 'Word - {}\n'.format(self.word) \
                + 'Translation - {}\n'.format(self.translation) \

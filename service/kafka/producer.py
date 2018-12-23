@@ -1,3 +1,4 @@
+import json
 import logging
 
 
@@ -10,12 +11,7 @@ class Producer:
     async def send_message(self, message):
         try:
             await self.producer.send_and_wait(
-                self.topic_name, self.__get_message__(message).encode('UTF-8'))
+                self.topic_name, json.dumps(
+                    message.build_kafka_message()).encode('UTF-8'))
         except Exception as exp:
             self.module_logger.error("Exception : {}".format(exp))
-
-    def __get_message__(self, message):
-        if isinstance(message, str):
-            return message
-        else:
-            return message.get_kafka_message()
