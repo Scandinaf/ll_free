@@ -3,7 +3,7 @@ import json
 
 class Word:
     def __init__(self, word, translation=None, phrase=None, synonyms=[],
-                 sound_record_path=None, study_status=None,
+                 sound_record_path=None, study_status=0,
                  last_repeat_date=None, *args, **keywords):
         self.word = word.strip()
         self.word_lower = self.word.lower()
