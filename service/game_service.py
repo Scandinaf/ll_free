@@ -26,9 +26,10 @@ class GameService:
 
     async def __game__(self, word_list):
         bulk_update_dict = {}
-        index = 0
+        index = -1
         print(self.__get_rules__())
         while True:
+            print("current index - {0}, total words - {1}".format(index + 1, len(word_list)))
             command = input("Please enter command: ")
             if command == 'next':
                 new_index, result = self.__game_iter__(index,
@@ -37,14 +38,14 @@ class GameService:
                                                        bulk_update_dict)
                 index = new_index
                 self.__handle_command_result__(result)
-            if command == 'previous':
+            elif command == 'previous':
                 new_index, result = self.__game_iter__(index,
                                                        -1,
                                                        word_list,
                                                        bulk_update_dict)
                 index = new_index
                 self.__handle_command_result__(result)
-            if command == 'play':
+            elif command == 'play':
                 self.__handle_command_result__(
                     self.__game_play_audio__(word_list, index))
             elif command == 'exit':

@@ -40,12 +40,12 @@ class MongoDBWord(MongoDB):
 
     async def update_study_status(self, word_list):
         helper = DateTimeHelper()
-        return await self.collection.bulk_write(map(lambda word:
-                                                    UpdateOne(self.__get_query_by_word__(word),
-                                                              {'$inc': {'study_status': 1},
-                                                               '$set': {'last_repeat_date':
-                                                                            helper.get_current_date_time()}}),
-                                                    word_list))
+        return await self.collection.bulk_write(list(map(lambda word:
+                                                         UpdateOne({'word_lower': word.word_lower},
+                                                                   {'$inc': {'study_status': 1},
+                                                                    '$set': {'last_repeat_date':
+                                                                                 helper.get_current_date_time()}}),
+                                                         word_list)))
 
     async def find_one_by_word(self, word):
         return await self.collection.find_one(self.__get_query_by_word__(word))
