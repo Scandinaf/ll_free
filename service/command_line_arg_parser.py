@@ -16,6 +16,7 @@ class CommandLineArgParser:
 
     @validate_wrapper(validation_func=validate_arg_dict)
     def __set_atg_dict__(self, arg_dict):
+        arg_dict['-w'] = arg_dict['-w'].strip()
         self.arg_dict = arg_dict
 
     def arg_dict_to_json(self, cls):
