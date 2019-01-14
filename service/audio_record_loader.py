@@ -1,6 +1,4 @@
 import asyncio
-import os
-
 import aiohttp
 
 from model.http_exception import HttpException
@@ -25,8 +23,7 @@ class AudioRecordLoader:
         return self.data_template.format(word)
 
     def __get_file_path__(self, word):
-        file_name = self.__get_file_name__(word) + ".mp3"
-        return os.path.join(self.dir_path, file_name)
+        return "%s%s.mp3" % (self.dir_path, self.__get_file_name__(word))
 
     def __get_file_name__(self, word):
         if len(word) > 10:
@@ -43,9 +40,9 @@ class AudioRecordLoader:
         if data["success"]:
             async with session.get(self.file_storage_url.format(data["id"]),
                                    headers=self.file_storage_request_headers) as audio_file_response:
-                await self.__response_status_handler__(audio_file_response)
+                _ = await self.__response_status_handler__(audio_file_response)
                 file_path = self.__get_file_path__(word)
-                await self.__response_bytes_to_file__(file_path, audio_file_response)
+                _ = await self.__response_bytes_to_file__(file_path, audio_file_response)
                 return file_path
 
     async def __load_file_request_retry__(self, session, data, word, retry_count=3, delay=3):
@@ -54,7 +51,11 @@ class AudioRecordLoader:
         except HttpException as exp:
             if exp.status == 403 and retry_count > 0:
                 await asyncio.sleep(delay)
-                await self.__load_file_request_retry__(session, data, word, retry_count=retry_count-1, delay=delay)
+                return await self.__load_file_request_retry__(session,
+                                                              data,
+                                                              word,
+                                                              retry_count=retry_count-1,
+                                                              delay=delay)
             else:
                 raise
 
