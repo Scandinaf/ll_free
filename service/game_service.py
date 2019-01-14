@@ -1,4 +1,5 @@
 import logging
+import os
 
 from pygame import mixer
 
@@ -26,25 +27,20 @@ class GameService:
 
     async def __game__(self, word_list):
         bulk_update_dict = {}
-        index = -1
-        print(self.__get_rules__())
+        index = 0
+        self.__game_iter__(index, 0, word_list, bulk_update_dict)
         while True:
-            print("current index - {0}, total words - {1}".format(index + 1, len(word_list)))
             command = input("Please enter command: ")
             if command == 'next':
-                new_index, result = self.__game_iter__(index,
-                                                       1,
-                                                       word_list,
-                                                       bulk_update_dict)
-                index = new_index
-                self.__handle_command_result__(result)
+                index = self.__game_iter__(index,
+                                           1,
+                                           word_list,
+                                           bulk_update_dict)
             elif command == 'previous':
-                new_index, result = self.__game_iter__(index,
-                                                       -1,
-                                                       word_list,
-                                                       bulk_update_dict)
-                index = new_index
-                self.__handle_command_result__(result)
+                index = self.__game_iter__(index,
+                                           -1,
+                                           word_list,
+                                           bulk_update_dict)
             elif command == 'play':
                 self.__handle_command_result__(
                     self.__game_play_audio__(word_list, index))
@@ -53,10 +49,18 @@ class GameService:
                     await self.db_layer.word.update_study_status(
                         list(bulk_update_dict.values()))
                 break
-            else:
-                print(self.__get_rules__())
 
     def __game_iter__(self, index, value, word_list, bulk_update_dict):
+        os.system('cls')
+        new_index, result = self.__get_element__(index,
+                                                 value,
+                                                 word_list,
+                                                 bulk_update_dict)
+        self.__print_default_header__(new_index, word_list)
+        self.__handle_command_result__(result)
+        return new_index
+
+    def __get_element__(self, index, value, word_list, bulk_update_dict):
         new_index = index + value
         if check_index_valid(new_index, len(word_list)):
             entity = word_list[new_index]
@@ -82,6 +86,10 @@ class GameService:
     def __handle_command_result__(self, result):
         if result is not None:
             print(result)
+
+    def __print_default_header__(self, index, word_list):
+        print(self.__get_rules__())
+        print("current index - {0}, total words - {1}".format(index + 1, len(word_list)))
 
     @staticmethod
     def __get_rules__():
